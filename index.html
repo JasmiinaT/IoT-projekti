@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>Temperature sensor</title>
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script src="gchart.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="gauges" class="gauge-container">
+      <div class="gauge-wrapper">
+        <h3>Temperature Sensor</h3>
+        <!-- Title for the temperature gauge -->
+        <div id="temperature_gauge" class="gauge"></div>
+      </div>
+      <div class="gauge-wrapper">
+        <h3>Reference Sensor</h3>
+        <!-- Title for the reference gauge -->
+        <div id="reference_gauge" class="gauge"></div>
+      </div>
+    </div>
+    <div id="curve_chart"></div>
+  </body>
+</html>
