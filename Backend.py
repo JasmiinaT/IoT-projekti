@@ -4,17 +4,17 @@ import machine
 import requests
 
 # Replace "?" with your own credentials
-SSID = '??????'
-PASSWORD = '??????'
-APIKEY = "??????"
+ssid = '??????'
+password = '??????'
+APIKEY = "T9S32VCI1I6CH7HY"
 
-def Wificon():
+def Wificon(ssid, pswd):
     # Initialize the Wi-Fi interface
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
 
     # Connect to the Wi-Fi network
-    wlan.connect(SSID, PASSWORD)
+    wlan.connect(ssid, pswd)
 
     # Check the connection status
     if wlan.status() != 3:
@@ -44,7 +44,7 @@ def Send_temp(temp, ref):
     return None
 
 def Main():
-    Wificon()
+    Wificon(ssid, password)
     while True:
         temperature = Read_temp()
         ref_temp = Read_ref()
