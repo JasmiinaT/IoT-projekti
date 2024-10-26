@@ -6,7 +6,7 @@ import requests
 # Replace "?" with your own credentials
 ssid = '??????'
 password = '??????'
-APIKEY = "T9S32VCI1I6CH7HY"
+apikey = "T9S32VCI1I6CH7HY"
 
 def Wificon(ssid, pswd):
     # Initialize the Wi-Fi interface
@@ -35,16 +35,16 @@ def Read_ref()
     
     return ref_temp
 
-def Send_temp(temp, ref):
+def Send_temp(temp, ref, api):
     # Send temperature to Thingspeak
-    thingspeak_http = f'https://api.thingspeak.com/update?api_key={APIKEY}&field1={temp}&field2={ref}'
+    thingspeak_http = f'https://api.thingspeak.com/update?api_key={api}&field1={temp}&field2={ref}'
     response = requests.get(thingspeak_http)
     response.close()
     print(temp)
     return None
 
 def Main():
-    Wificon(ssid, password)
+    Wificon(ssid, password, apikey)
     while True:
         temperature = Read_temp()
         ref_temp = Read_ref()
