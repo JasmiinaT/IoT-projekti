@@ -4,18 +4,17 @@ import machine
 import requests
 
 # Replace "?" with your own credentials
-SSID = '??????'
-PASSWORD = '??????'
-APIKEY = "??????"
-SENSOR = machine.ADC(4) # Initializes the ADC on pin 4 (Analog-to-Digital Converter)
+ssid = '??????'
+password = '??????'
+apikey = "T9S32VCI1I6CH7HY"
 
-def Wificon():
+def Wificon(ssid, pswd):
     # Initialize the Wi-Fi interface
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
 
     # Connect to the Wi-Fi network
-    wlan.connect(SSID, PASSWORD)
+    wlan.connect(ssid, pswd)
 
     # Check the connection status
     if wlan.status() != 3:
@@ -27,26 +26,29 @@ def Wificon():
     return None
 
 def Read_temp():
-    # Read temperature from Pico's internal sensor
-    adc_value = SENSOR.read_u16()
-    volt = (3.3/65535) * adc_value
-    temperature = 27 - (volt - 0.706)/0.001721
-    temperature = round(temperature, 2)
+    # Read temperature sensor
+
     return temperature
 
-def Send_temp(temp):
+def Read_ref()
+    # Read reference temperature
+    
+    return ref_temp
+
+def Send_temp(temp, ref, api):
     # Send temperature to Thingspeak
-    thingspeak_http = f'https://api.thingspeak.com/update?api_key={APIKEY}&field1={temp}'
+    thingspeak_http = f'https://api.thingspeak.com/update?api_key={api}&field1={temp}&field2={ref}'
     response = requests.get(thingspeak_http)
     response.close()
     print(temp)
     return None
 
 def Main():
-    Wificon()
+    Wificon(ssid, password, apikey)
     while True:
         temperature = Read_temp()
-        Send_temp(temperature)
+        ref_temp = Read_ref()
+        Send_temp(temperature, ref_temp)
         time.sleep(60)  # Set interval for measurement (s)
 
 Main()
