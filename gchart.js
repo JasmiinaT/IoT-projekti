@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function drawChart() {
     fetch(
-      "https://api.thingspeak.com/channels/2713341/feeds.json?api_key=KDMM5EO6LEIEJXGH&results=2"
+      "https://api.thingspeak.com/channels/2713341/feeds.json?api_key=KDMM5EO6LEIEJXGH&results=60"
     )
       .then((response) => response.json())
       .then((APIdata) => {
@@ -18,15 +18,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const data = [["Time", "Temperature", "Reference temperature"]];
         let latestTemperature = null;
         let latestReference = null;
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
 
         feeds.forEach((feed) => {
           const time = new Date(feed.created_at);
-          const temperature = parseFloat(feed.field1);
-          const referenceTemperature = parseFloat(feed.field2);
-          data.push([time, temperature, referenceTemperature]);
+          if (time >= oneHourAgo) {
+            const temperature = parseFloat(feed.field1);
+            const referenceTemperature = parseFloat(feed.field2);
+            data.push([time, temperature, referenceTemperature]);
 
-          latestTemperature = temperature;
-          latestReference = referenceTemperature;
+            latestTemperature = temperature;
+            latestReference = referenceTemperature;
+          }
         });
 
         const dataTable = google.visualization.arrayToDataTable(data);
@@ -38,13 +41,14 @@ document.addEventListener("DOMContentLoaded", function () {
           colors: ["#1b9e77", "#d95f02"],
           width: 900,
           height: 500,
+          pointSize: 5, // Add this line to show data points
         };
         const chart = new google.visualization.LineChart(
           document.getElementById("curve_chart")
         );
         chart.draw(dataTable, options);
-        if (latestHandmade !== null && latestReference !== null) {
-          drawGauges(latestHandmade, latestReference);
+        if (latestTemperature !== null && latestReference !== null) {
+          drawGauges(latestTemperature, latestReference);
         }
       })
       .catch((error) => console.error("Error fetching data:", error));
@@ -95,4 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     referenceChart.draw(referenceData, referenceOptions);
   }
+
+  // Refresh the page every minute
+  setInterval(drawChart, 60000);
 });
